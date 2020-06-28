@@ -80,14 +80,14 @@ moving=${prefix}_brain.nii.gz
 ncores=`lscpu | grep Core\(s\) | awk '{print $4}'`
 
 exe="${ANTSDIR}/antsRegistrationSyN.sh -d 3 -f ${fixed} -m ${moving} -n ${ncores} -o ${prefix}.t12mni"
-check_exe ${prefix}Warped.nii.gz "${exe}"
+check_exe ${prefix}.t12mniWarped.nii.gz "${exe}"
 
 
 if [ $noclean_opt == "FALSE" ]
 then
 
 cleanlist=()
-cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmentationPosteriors*.nii.gz)
+cleanlist=(${cleanlist[@]} ${prefix}ACTStage*Complete.txt ${prefix}BrainSegmentationPosteriors*.nii.gz)
 
 	for f in ${cleanlist[@]}
 	do
