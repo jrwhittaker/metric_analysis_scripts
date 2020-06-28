@@ -48,14 +48,12 @@ exe="${exe} -m ${OASISTPLDIR}/T_template0_BrainCerebellumProbabilityMask.nii.gz"
 exe="${exe} -p ${OASISTPLDIR}/Priors2/priors%d.nii.gz"
 exe="${exe} -o ${prefix}"
 
-check_exe ${prefix}.CorticalThickness.nii.gz "${exe}"
+check_exe ${prefix}CorticalThickness.nii.gz "${exe}"
 
-if (1 -eq 2)
-then
 # Segmentation masks
 
-BE_SEGMENTATION=${prefix}.BrainSegmentation.nii.gz
-BE_SEGMENTATION_PAD=${prefix}.BrainSegmentationPad.nii.gz
+BE_SEGMENTATION=${prefix}BrainSegmentation.nii.gz
+BE_SEGMENTATION_PAD=${prefix}BrainSegmentationPad.nii.gz
 padvoxels=10
 
 check_exe ${BE_SEGMENTATION_PAD} "${ANTSDIR}/ImageMath 3 ${BE_SEGMENTATION_PAD} PadImage ${BE_SEGMENTATION} $padvoxels"
@@ -64,13 +62,13 @@ check_exe ${prefix}.wm.nii.gz "${ANTSDIR}/ThresholdImage 3 ${BE_SEGMENTATION} ${
 check_exe ${prefix}.gm.nii.gz "${ANTSDIR}/ThresholdImage 3 ${BE_SEGMENTATION} ${prefix}.gm.nii.gz 2 2 1 0"
 check_exe ${prefix}.csf.nii.gz "${ANTSDIR}/ThresholdImage 3 ${BE_SEGMENTATION} ${prefix}.csf.nii.gz 1 1 1 0"
 
-${ANTSDIR}/ImageMath 3 ${prefix}.wm.nii.gz GetLargestComponent ${segout}/s${pid}.wm.nii.gz
-${ANTSDIR}/ImageMath 3 ${prefix}.gm.nii.gz GetLargestComponent ${segout}/s${pid}.gm.nii.gz
+${ANTSDIR}/ImageMath 3 ${prefix}.wm.nii.gz GetLargestComponent ${prefix}.wm.nii.gz
+${ANTSDIR}/ImageMath 3 ${prefix}.gm.nii.gz GetLargestComponent ${prefix}.gm.nii.gz
 
 
 # Skull stripped
 
-exe="${AFNIDIR}/3dcalc -a ${prefix}.BrainSegmentation0N4.nii.gz -b ${prefix}.BrainExtractionMask.nii.gz"
+exe="${AFNIDIR}/3dcalc -a ${prefix}BrainSegmentation0N4.nii.gz -b ${prefix}BrainExtractionMask.nii.gz"
 exe="${exe} -expr "a*b" -prefix ${prefix}_brain.nii.gz"
 check_exe ${prefix}_brain.nii.gz "${exe}"
 
@@ -95,8 +93,6 @@ cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmen
 	do
 	if [ -f ${volout}/${f} ]; then cleanup ${volout}/${f}; fi
 	done
-
-fi
 
 fi
 
