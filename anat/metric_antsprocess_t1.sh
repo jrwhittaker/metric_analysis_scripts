@@ -38,22 +38,22 @@ noclean_opt=`exist_opt "-nocleanup" "$@"`
 
 # Robust FOV
 
-check_exe ${prefix}_std.nii.gz "${USRFSLDIR}/fslreorient2std ${input} ${prefix}_std"
-check_exe ${prefix}_robustfov.nii.gz "${USRFSLDIR}/robustfov -i ${prefix}_std -r ${prefix}_robustfov -m ${prefix}_robustfov"
+check_exe ${prefix}_std.nii.gz "${USRFSLDIR}/fslreorient2std ${input} ${prefix}.std"
+check_exe ${prefix}_robustfov.nii.gz "${USRFSLDIR}/robustfov -i ${prefix}.std -r ${prefix}.robustfov -m ${prefix}.robustfov"
 
 # ANTS cortical thickness script
-exe="${ANTSCRIPTDIR}/antsCorticalThickness.sh -d 3 -a ${prefix}_robustfov.nii.gz"
+exe="${ANTSCRIPTDIR}/antsCorticalThickness.sh -d 3 -a ${prefix}.robustfov.nii.gz"
 exe="${exe} -e ${OASISTPLDIR}/T_template0.nii.gz"
 exe="${exe} -m ${OASISTPLDIR}/T_template0_BrainCerebellumProbabilityMask.nii.gz"
 exe="${exe} -p ${OASISTPLDIR}/Priors2/priors%d.nii.gz"
-exe="${exe} -o ${prefix}"
+exe="${exe} -o ${prefix}."
 
-check_exe ${prefix}CorticalThickness.nii.gz "${exe}"
+check_exe ${prefix}.CorticalThickness.nii.gz "${exe}"
 
 # Segmentation masks
 
-BE_SEGMENTATION=${prefix}BrainSegmentation.nii.gz
-BE_SEGMENTATION_PAD=${prefix}BrainSegmentationPad.nii.gz
+BE_SEGMENTATION=${prefix}.BrainSegmentation.nii.gz
+BE_SEGMENTATION_PAD=${prefix}.BrainSegmentationPad.nii.gz
 padvoxels=10
 
 check_exe ${BE_SEGMENTATION_PAD} "${ANTSDIR}/ImageMath 3 ${BE_SEGMENTATION_PAD} PadImage ${BE_SEGMENTATION} $padvoxels"
@@ -68,26 +68,26 @@ ${ANTSDIR}/ImageMath 3 ${prefix}.gm.nii.gz GetLargestComponent ${prefix}.gm.nii.
 
 # Skull stripped
 
-exe="${AFNIDIR}/3dcalc -a ${prefix}BrainSegmentation0N4.nii.gz -b ${prefix}BrainExtractionMask.nii.gz"
-exe="${exe} -expr "a*b" -prefix ${prefix}_brain.nii.gz"
-check_exe ${prefix}_brain.nii.gz "${exe}"
+exe="${AFNIDIR}/3dcalc -a ${prefix}.BrainSegmentation0N4.nii.gz -b ${prefix}.BrainExtractionMask.nii.gz"
+exe="${exe} -expr "a*b" -prefix ${prefix}.brain.nii.gz"
+check_exe ${prefix}.brain.nii.gz "${exe}"
 
 # MNI normalisation
 
 fixed=${STDTPLDIR}/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T1w.nii.gz
-moving=${prefix}_brain.nii.gz
+moving=${prefix}.brain.nii.gz
 
 ncores=`lscpu | grep Core\(s\) | awk '{print $4}'`
 
-exe="${ANTSDIR}/antsRegistrationSyN.sh -d 3 -f ${fixed} -m ${moving} -n ${ncores} -o ${prefix}.t12mni"
-check_exe ${prefix}.t12mniWarped.nii.gz "${exe}"
+exe="${ANTSDIR}/antsRegistrationSyN.sh -d 3 -f ${fixed} -m ${moving} -n ${ncores} -o ${prefix}.mni."
+check_exe ${prefix}.mni.Warped.nii.gz "${exe}"
 
 
 if [ $noclean_opt == "FALSE" ]
 then
 
 cleanlist=()
-cleanlist=(${cleanlist[@]} ${prefix}ACTStage*Complete.txt ${prefix}BrainSegmentationPosteriors*.nii.gz)
+cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmentationPosteriors*.nii.gz)
 
 	for f in ${cleanlist[@]}
 	do
