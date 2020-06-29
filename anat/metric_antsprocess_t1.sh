@@ -38,8 +38,8 @@ noclean_opt=`exist_opt "-nocleanup" "$@"`
 
 # Robust FOV
 
-check_exe ${prefix}_std.nii.gz "${USRFSLDIR}/fslreorient2std ${input} ${prefix}.std"
-check_exe ${prefix}_robustfov.nii.gz "${USRFSLDIR}/robustfov -i ${prefix}.std -r ${prefix}.robustfov -m ${prefix}.robustfov"
+check_exe ${prefix}.std.nii.gz "${USRFSLDIR}/fslreorient2std ${input} ${prefix}.std"
+check_exe ${prefix}.robustfov.nii.gz "${USRFSLDIR}/robustfov -i ${prefix}.std -r ${prefix}.robustfov -m ${prefix}.robustfov"
 
 # ANTS cortical thickness script
 exe="${ANTSCRIPTDIR}/antsCorticalThickness.sh -d 3 -a ${prefix}.robustfov.nii.gz"
@@ -86,13 +86,9 @@ check_exe ${prefix}.mni.Warped.nii.gz "${exe}"
 if [ $noclean_opt == "FALSE" ]
 then
 
-cleanlist=()
-cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmentationPosteriors*.nii.gz)
-
-	for f in ${cleanlist[@]}
-	do
-	if [ -f ${volout}/${f} ]; then cleanup ${volout}/${f}; fi
-	done
+	cleanlist=()
+	cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmentationPosteriors*.nii.gz)
+	for f in ${cleanlist[@]}; do cleanup $f; done
 
 fi
 
