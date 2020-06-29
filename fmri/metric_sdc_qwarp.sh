@@ -63,6 +63,9 @@ check_exe ${nm}.0GenericAffine.mat "${exe}"
 
 check_exe ${nm}.Warped.nii.gz "${ANTSDIR}/antsApplyTransforms -d 3 -i $moving -r $fixed -n Linear -t ${nm}.0GenericAffine.mat -o ${nm}.Warped.nii.gz"
 
+## 2
+# Estimate susceptibility distortion warp field 
+
 exe1="${AFNIDIR}/3dQwarp -source $ap -base ${nm}.Warped.nii.gz -plusminus -noXdis -noZdis -prefix ${prefix}"
 exe2="${AFNIDIR}/3dAFNItoNIFTI -prefix ${prefix}.sdc.nii.gz ${prefix}_PLUS+orig"
 exe3="${AFNIDIR}/3dAFNItoNIFTI -prefix ${prefix}.sdc_warp.nii.gz ${prefix}_PLUS_WARP+orig"
