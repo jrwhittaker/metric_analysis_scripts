@@ -153,9 +153,11 @@ function check_exe()
 
 function check_dir()
 {
-	if [ ! -d $1 ]
+	d=$1
+	if [ ! -d $d ]
 	then
-		mkdir $1
+		echo "making directory `basename $d`"
+		mkdir $d
 	fi
 }
 
