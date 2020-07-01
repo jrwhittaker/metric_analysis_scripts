@@ -11,8 +11,8 @@
 ###################################################
 
 #source config and miscfunc files
-source ww_config.sh
-source ww_miscfunc.sh
+source metric_config.sh
+source metric_miscfunc.sh
 
 # Usage function
 function usage()

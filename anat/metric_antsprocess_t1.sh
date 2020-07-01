@@ -82,12 +82,16 @@ ncores=`lscpu | grep Core\(s\) | awk '{print $4}'`
 exe="${ANTSDIR}/antsRegistrationSyN.sh -d 3 -f ${fixed} -m ${moving} -n ${ncores} -o ${prefix}.mni."
 check_exe ${prefix}.mni.Warped.nii.gz "${exe}"
 
+check_exe ${prefix}.seg_post.nii.gz "mv ${prefix}.BrainSegmentationPosteriors6.nii.gz ${prefix}.seg_post.nii.gz"
+check_exe ${prefix}.nii.gz "mv ${prefix}.BrainSegmentation0N4.nii.gz ${prefix}.nii.gz"
+check_exe ${prefix}.brain_mask.nii.gz "mv ${prefix}.BrainExtractionMask.nii.gz ${prefix}.brain_mask.nii.gz"
+
 
 if [ $noclean_opt == "FALSE" ]
 then
 
 	cleanlist=()
-	cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmentationPosteriors*.nii.gz)
+	cleanlist=(${cleanlist[@]} ${prefix}.ACTStage*Complete.txt ${prefix}.BrainSegmentation*.nii.gz ${prefix}.robustfov.nii.gz ${prefix}.std.nii.gz)
 	for f in ${cleanlist[@]}; do cleanup $f; done
 
 fi
