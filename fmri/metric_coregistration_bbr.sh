@@ -55,7 +55,12 @@ then
 	check_exe ${prefix}_itk.mat "${CONVDIR}/c3d_affine_tool -ref ${t1_brain} -src ${epi} ${prefix}.mat -fsl2ras -oitk ${prefix}_itk.mat"
 fi
 
+cleanlist=(${prefix}_fast*)
 
+if [ $noclean_opt == "FALSE" ]
+then
+	for f in ${cleanlist[@]}; do cleanup $f; done
+fi
 
 
 

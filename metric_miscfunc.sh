@@ -161,6 +161,14 @@ function check_dir()
 	fi
 }
 
+function check_exe_out()
+{
+	if [ ! -f $1 ]
+	then
+		shift
+		$1 >> $2
+	fi
+}
 
 
 

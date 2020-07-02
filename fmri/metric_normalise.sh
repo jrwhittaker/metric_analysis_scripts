@@ -63,12 +63,15 @@ if [ $ts_opt == "TRUE" ]; then input_type=3; fi
 
 ### MAIN
 
+cleanlist=()
+
 if [ -v sdc ]
 then
 	for rep in `seq 0 ${nreps}`
 	do
 		check_exe ${prefix[${rep}]}.sdc.nii.gz "${AFNIDIR}/3dNwarpApply -prefix ${prefix[${rep}]}.sdc.nii.gz -nwarp ${sdc} -source ${input[${rep}]}"
 		input[${rep}]=${prefix[${rep}]}.sdc.nii.gz
+		cleanlist=(${cleanlist[@]} ${prefix[${rep}]}.sdc.nii.gz)
 	done
 fi
 
@@ -82,10 +85,12 @@ do
 	done
 	exe="${exe} -o ${prefix[${rep}]}.mni.nii.gz"
 	check_exe ${prefix[${rep}]}.mni.nii.gz "${exe}"
-	#echo $exe
 done
 
-
+if [ $noclean_opt == "FALSE" ]
+then
+	for f in ${cleanlist[@]}; do cleanup $f; done
+fi
 
 
 

@@ -125,6 +125,9 @@ case "$separate_opt" in
 	exe="${exe} -base ${prefix[${rep}]}.volreg_finaltarget.nii.gz"
 	exe="${exe} ${input[${rep}]}"
 	check_exe ${prefix[${rep}]}.volreg.nii.gz "$exe"
+
+	exe="${AFNIDIR}/1d_tool.py -infile ${prefix[${rep}]}.volreg.1D -set_nruns 1 -demean -write ${prefix[${rep}]}.motion_demean.1D"
+	check_exe ${prefix[${rep}]}.motion_demean.1D "${exe}"
 	done
 
 	;;
@@ -192,6 +195,9 @@ case "$separate_opt" in
 	exe="${exe} -base ${outdir}/volreg_finaltarget.nii.gz"
 	exe="${exe} ${input[${rep}]}"
 	check_exe ${prefix[${rep}]}.volreg.nii.gz "$exe"
+
+	exe="${AFNIDIR}/1d_tool.py -infile ${prefix[${rep}]}.volreg.1D -set_nruns 1 -demean -write ${prefix[${rep}]}.motion_demean.1D"
+	check_exe ${prefix[${rep}]}.motion_demean.1D "${exe}"
 	done
 
 	;;
